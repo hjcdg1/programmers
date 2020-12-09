@@ -1,16 +1,16 @@
 def solution(routes):
-	routes.sort(key=lambda x: x[1], reverse=True)
+	routes.sort(key=lambda x: x[1])
 
-	camera_cnt = 1
+	camera_cnt = 0
 	range_start, range_end = tuple(routes[0])
 
 	for route in routes[1:]:
 		start, end = tuple(route)
 		
 		# 구간 겹침
-		if end >= range_start:
-			range_start = max(range_start, start)
-			range_end = end
+		if range_end >= start:
+			range_start = start
+			range_end = min(range_end, end)
 		
 		# 구간 안 겹침
 		else:
@@ -18,4 +18,4 @@ def solution(routes):
 			range_start = start
 			range_end = end
 
-	return camera_cnt
+	return camera_cnt + 1

@@ -6,13 +6,16 @@ def get_parent(parent, v):
 		parent[v] = result
 		return result
 
+
 def is_same_set(parent, v1, v2):
 	p1, p2 = get_parent(parent, v1), get_parent(parent, v2)
 	return True if p1 == p2 else False
 
+
 def union(parent, v1, v2):
 	p1, p2 = get_parent(parent, v1), get_parent(parent, v2)
 	parent[p2] = p1
+
 
 def solution(n, costs):
 	edges = sorted(costs, key=lambda x: x[2])
