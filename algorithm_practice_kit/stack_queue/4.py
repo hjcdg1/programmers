@@ -1,5 +1,3 @@
-from collections import deque
-
 def solution(priorities, location):
 	N = len(priorities)
 	priorities = [{'id': i, 'p': p} for i, p in enumerate(priorities)]

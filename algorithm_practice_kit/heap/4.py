@@ -1,34 +1,27 @@
 import heapq
 
-def solution(operations):
-    max_h = []
-    min_h = []
 
-    is_deleted = [False for _ in range(1000000)]
+def solution(stock, dates, supplies, k):
+	N = len(dates)
 
-    for idx, operation in enumerate(operations):
-        op, data = tuple(operation.split())
-        data = int(data)
+	zero_day = stock
+	cnt = 0
+	i = 0
+	h = []
 
-        if op == 'I':
-            heapq.heappush(max_h, (-data, idx))
-            heapq.heappush(min_h, (data, idx))
-        else:
-            if not (max_h and min_h):
-                continue
+	while True:
+		if zero_day >= k:
+			break
+		else:
+			while True:
+				if i < N and dates[i] <= zero_day:
+					heapq.heappush(h, -supplies[i])
+					print("힙에 {} 추가".format(supplies[i]))
+					i += 1
+				else:
+					break
+			zero_day += -heapq.heappop(h)
+			cnt += 1
+			print("구간 {}로 확장".format(zero_day))
 
-            if data == 1:
-                is_deleted[heapq.heappop(max_h)[1]] = True
-            else:
-                is_deleted[heapq.heappop(min_h)[1]] = True
-
-            while max_h and is_deleted[max_h[0][1]]:
-                heapq.heappop(max_h)
-
-            while min_h and is_deleted[min_h[0][1]]:
-                heapq.heappop(min_h)
-
-    if not (max_h and min_h):
-        return [0, 0]
-    else:
-        return [-heapq.heappop(max_h)[0], heapq.heappop(min_h)[0]]
+	return cnt
