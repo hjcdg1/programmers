@@ -5,11 +5,11 @@ def solution(citations):
 	h = 0
 
 	for c in range(1, citations[0]):
-		if -1 + c < N:
+		if c - 1 < N:
 			h = c
 
 	for idx, c in enumerate(citations):
-		if idx - 1 + c < N:
+		if idx + c - 1 < N:
 			h = c
 			if (idx + 1 < N) and (citations[idx + 1] > c + 1):
 				curr = c + 1
