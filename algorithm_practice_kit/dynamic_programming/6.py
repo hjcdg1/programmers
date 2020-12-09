@@ -1,18 +1,12 @@
-def solution(money):
-	M = len(money)
-	D = [[0, 0] for _ in range(M)]
+def solution(left, right):
+	L, R = len(left), len(right)
 
-	D[M - 1][0] = money[M - 1]
-	D[M - 1][1] = 0
+	D = [[0 for _ in range(R + 1)] for _ in range(L + 1)]
 
-	D[M - 2][0] = max(money[M - 2], money[M - 1])
-	D[M - 2][1] = money[M - 2]
+	for i in reversed(range(L)):
+		for j in reversed(range(R)):
+			D[i][j] = max(D[i + 1][j], D[i + 1][j + 1])
+			if left[i] > right[j]:
+				D[i][j] = max(D[i][j], D[i][j + 1] + right[j])
 
-	for i in reversed(range(1, M - 2)):
-		D[i][0] = max(money[i] + D[i + 2][0], D[i + 1][0])
-		D[i][1] = max(money[i] + D[i + 2][1], D[i + 1][1])
-
-	D[0][0] = D[1][0]
-	D[0][1] = money[0] + D[2][1]
-
-	return max(D[0][0], D[0][1])
+	return D[0][0]

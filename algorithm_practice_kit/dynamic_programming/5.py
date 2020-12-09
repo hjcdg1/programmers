@@ -1,12 +1,10 @@
-def solution(left, right):
-	L, R = len(left), len(right)
+def solution(N):
+	D = [0 for _ in range(N + 1)]
 
-	D = [[0 for _ in range(R + 1)] for _ in range(L + 1)]
+	D[1] = 1
+	D[2] = 1
 
-	for i in reversed(range(L)):
-		for j in reversed(range(R)):
-			D[i][j] = max(D[i + 1][j], D[i + 1][j + 1])
-			if left[i] > right[j]:
-				D[i][j] = max(D[i][j], D[i][j + 1] + right[j])
+	for i in range(3, N + 1):
+		D[i] = D[i - 1] + D[i - 2]
 
-	return D[0][0]
+	return D[N] * 2 + (D[N] + D[N - 1]) * 2

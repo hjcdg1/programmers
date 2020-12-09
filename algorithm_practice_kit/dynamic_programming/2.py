@@ -1,10 +1,13 @@
-def solution(N):
-	D = [0 for _ in range(N + 1)]
+def solution(triangle):
+	H = len(triangle)
 
-	D[1] = 1
-	D[2] = 1
+	D = [[0 for _ in range(i + 1)] for i in range(H)]
 
-	for i in range(3, N + 1):
-		D[i] = D[i - 1] + D[i - 2]
+	for j in range(H):
+		D[H - 1][j] = triangle[H - 1][j]
 
-	return D[N] * 2 + (D[N] + D[N - 1]) * 2
+	for i in reversed(range(H - 1)):
+		for j in range(i + 1):
+			D[i][j] = triangle[i][j] + max(D[i + 1][j], D[i + 1][j + 1])
+
+	return D[0][0]
