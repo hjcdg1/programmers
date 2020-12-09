@@ -1,26 +1,35 @@
 import heapq
 
-def solution(stock, dates, supplies, k):
-	N = len(dates)
 
-	zero_day = stock
-	cnt = 0
-	i = 0
+def solution(jobs):
+	N = len(jobs)
+	jobs = [[job[1], job[0]] for job in jobs]
+	jobs.sort(key=lambda x: x[1])
+
+	idx = 0
+	start = 0
+	total_wait_time = 0
+	job_cnt = 0
+
 	h = []
 
 	while True:
-		if zero_day >= k:
-			break
-		else:
-			while True:
-				if i < N and dates[i] <= zero_day:
-					heapq.heappush(h, -supplies[i])
-					print("힙에 {} 추가".format(supplies[i]))
-					i += 1
-				else:
-					break
-			zero_day += -heapq.heappop(h)
-			cnt += 1
-			print("구간 {}로 확장".format(zero_day))
+		while idx < N and jobs[idx][1] <= start:
+			heapq.heappush(h, jobs[idx])
+			idx += 1
 
-	return cnt
+		if not h:
+			start = jobs[idx][1]
+			continue
+
+		min_job = heapq.heappop(h)
+
+		start += min_job[0]
+		total_wait_time += start - min_job[1]
+        
+		job_cnt += 1
+		if job_cnt == N:
+			break
+
+	answer = total_wait_time // N
+	return answer

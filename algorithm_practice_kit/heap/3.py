@@ -1,31 +1,75 @@
 import heapq
 
-def solution(jobs):
-	N = len(jobs)
-	jobs = [[job[1], job[0]] for job in jobs]
-	jobs.sort(key=lambda x: x[1])
 
-	idx = 0
-	start = jobs[0][1]
-	total_wait_time = 0
-	job_cnt = 0
+def solution(operations):
+    max_h = []
+    min_h = []
 
-	h = []
+    is_deleted = [False for _ in range(1000000)]
 
-	while job_cnt < N:
-		while idx < N and jobs[idx][1] <= start:
-			heapq.heappush(h, jobs[idx])
-			idx += 1
+    for idx, operation in enumerate(operations):
+        op, data = tuple(operation.split())
+        data = int(data)
 
-		if not h:
-			start = jobs[idx][1]
-			continue
+        if op == 'I':
+            heapq.heappush(max_h, (-data, idx))
+            heapq.heappush(min_h, (data, idx))
+        else:
+            if not (max_h and min_h):
+                continue
 
-		min_job = heapq.heappop(h)
+            if data == 1:
+                is_deleted[heapq.heappop(max_h)[1]] = True
+            else:
+                is_deleted[heapq.heappop(min_h)[1]] = True
 
-		start += min_job[0]
-		total_wait_time += start - min_job[1]
-		job_cnt += 1
+            while max_h and is_deleted[max_h[0][1]]:
+                heapq.heappop(max_h)
 
-	answer = total_wait_time // N
-	return answer
+            while min_h and is_deleted[min_h[0][1]]:
+                heapq.heappop(min_h)
+
+    if not (max_h and min_h):
+        return [0, 0]
+    else:
+        return [-heapq.heappop(max_h)[0], heapq.heappop(min_h)[0]]
+
+"""
+<another solution>
+
+def solution(operations):
+    max_h = []
+    min_h = []
+    size = 0
+    
+    for idx, operation in enumerate(operations):
+        op, data = tuple(operation.split())
+        data = int(data)
+
+        if op == 'I':
+            heapq.heappush(max_h, (-data, idx))
+            heapq.heappush(min_h, (data, idx))
+            size = size + 1
+        else:
+            if size == 0:
+                continue
+
+            if data == 1:
+                heapq.heappop(max_h)
+                if size == 2:
+                    e = max_h[0]
+                    max_h = [(e[0], e[1])]
+                    min_h = [(-e[0], e[1])]
+            else:
+                heapq.heappop(min_h)
+                if size == 2:
+                    e = min_h[0]
+                    max_h = [(-e[0], e[1])]
+                    min_h = [(e[0], e[1])]
+            size = size - 1
+
+    if size == 0:
+        return [0, 0]
+    else:
+        return [-heapq.heappop(max_h)[0], heapq.heappop(min_h)[0]]
+"""
