@@ -1,5 +1,6 @@
 import queue
 
+
 def solution(n, edge):
 	distance = [-1 for _ in range(n + 1)]
 	neighbors = [[] for _ in range(n + 1)]
