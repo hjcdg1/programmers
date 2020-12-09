@@ -2,6 +2,9 @@ def solution(N, number):
     D = [set() for _ in range(9)]
 
     D[1].add(N)
+    if number == N:
+        return 1
+        
     for i in range(2, 9):
         D[i].add(int(str(N) * i))
         for j in range(1, i):

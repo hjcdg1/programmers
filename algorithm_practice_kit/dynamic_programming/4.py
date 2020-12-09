@@ -1,19 +1,18 @@
-def solution(m, n, puddles):
-	D = [[0 for _ in range(m + 1)] for _ in range(n + 1)]
+def solution(money):
+	M = len(money) 
+	D = [[0, 0] for _ in range(M)]
 
-	D[n][m] = 1
-	for puddle in puddles:
-		D[puddle[1]][puddle[0]] = -1
+	D[M - 1][0] = money[M - 1]
+	D[M - 1][1] = 0
 
-	for i in reversed(range(1, n + 1)):
-		for j in reversed(range(1, m + 1)):
-			if D[i][j] != -1:
-				if i + 1 <= n:
-					D[i][j] += D[i + 1][j]
-				if j + 1 <= m:
-					D[i][j] += D[i][j + 1]
-				D[i][j] %= 1000000007
-			else:
-				D[i][j] = 0
+	D[M - 2][0] = max(money[M - 2], money[M - 1])
+	D[M - 2][1] = money[M - 2]
 
-	return D[1][1]
+	for i in reversed(range(1, M - 2)):
+		D[i][0] = max(money[i] + D[i + 2][0], D[i + 1][0])
+		D[i][1] = max(money[i] + D[i + 2][1], D[i + 1][1])
+
+	D[0][0] = D[1][0]
+	D[0][1] = money[0] + D[2][1]
+
+	return max(D[0][0], D[0][1])
