@@ -1,6 +1,7 @@
 from itertools import permutations
 from math import floor
 
+
 def solution(numbers):
 	N = len(numbers)
 	prime_numbers = set()

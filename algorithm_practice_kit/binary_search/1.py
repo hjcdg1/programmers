@@ -1,19 +1,23 @@
-def binary_search(budgets, M, start, end):
-	if start == end:
-		return start
+def binary_search(n, times, i, j):
+	if i == j:
+		return i
 
-	mid = (start + end + 1) // 2
-	total_budget = sum([min(budget, mid) for budget in budgets])
-	if total_budget == M:
-		return mid
-	elif total_budget < M:
-		return binary_search(budgets, M, mid, end)
+	mid = (i + j) // 2
+	
+	# 주어진 시간에 처리할 수 있는 최대 사람 수
+	possible_number = 0
+	for time in times:
+		possible_number += mid // time
+	
+	# 처리 불가능
+	if n > possible_number:
+		return binary_search(n, times, mid + 1, j)
+
+	# 처리 가능
 	else:
-		return binary_search(budgets, M, start, mid - 1)
+		return binary_search(n, times, i, mid)
 
-def solution(budgets, M):
-	N = len(budgets)
-	max_budget = max(budgets)
-	return binary_search(budgets, M, 0, max_budget)
 
-print(solution([120, 110, 140, 150], 485))
+def solution(n, times):
+	max_time = max(times) * n
+	return binary_search(n, times, 1, max_time)
