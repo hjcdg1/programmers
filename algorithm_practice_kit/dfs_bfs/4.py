@@ -27,6 +27,7 @@ def dfs(v, nvs, order, used_cnt, available_cnt, E_len):
 		else:
 			return True  # Success
 
+
 def solution(tickets):
 	# 노드 종류
 	V = set()
@@ -59,3 +60,71 @@ def solution(tickets):
 	order = []
 	dfs(str_to_int['ICN'], nvs, order, [0], available_cnt, E_len)
 	return [int_to_str[o] for o in order]
+
+"""
+<another solution>
+
+def dfs(idx, nvs, total_tickets_cnt, tickets_cnt, path):
+	# 현재 도시 방문
+	path.append(idx)
+
+	# 모든 항공권 사용 완료
+	if len(path) == total_tickets_cnt + 1:
+		return True
+
+	# 올바른 경로가 존재하는지 여부
+	path_exists = False
+
+	# 이웃 도시들에 대해 루프
+	for nv in nvs[idx]:
+		# 해당 도시를 가기 위한 항공권이 없는 경우
+		if tickets_cnt[idx][nv] == 0:
+			continue
+
+		# 항공권 사용
+		tickets_cnt[idx][nv] -= 1
+		path_exists = True
+
+		# 해당 도시 방문 시도 (DFS 재귀 호출)
+		result = dfs(nv, nvs, total_tickets_cnt, tickets_cnt, path)
+
+		# 잘못된 경로였다면, 사용한 항공권 회수
+		if not result:
+			tickets_cnt[idx][nv] += 1
+			path_exists = False
+
+	if not path_exists:
+		path.pop()
+		return False
+	else:
+		return True
+
+
+def solution(tickets):
+	# 도시(정점) 정보
+	V_set = set()
+	for ticket in tickets:
+		V_set.add(ticket[0])
+		V_set.add(ticket[1])
+	V_len = len(V_set)
+	V_list = list(V_set)  # convert int -> str
+	V_map = dict([(name, idx) for idx, name in enumerate(V_list)])  # convert str -> int
+
+	# 항공권(간선) 정보
+	nvs = [[] for _ in range(V_len)]
+	total_tickets_cnt = len(tickets)
+	tickets_cnt = [[0 for _ in range(V_len)] for _ in range(V_len)]
+	for ticket in tickets:
+		ticket_from, ticket_to = V_map[ticket[0]], V_map[ticket[1]]
+		nvs[ticket_from].append(ticket_to)
+		tickets_cnt[ticket_from][ticket_to] += 1
+
+	# 도시 이름을 기준으로 항공권 정렬
+	for nv_list in nvs:
+		nv_list.sort(key=lambda v: V_list[v])
+
+	path = []
+	dfs(V_map['ICN'], nvs, total_tickets_cnt, tickets_cnt, path)
+
+	return list(map(lambda v: V_list[v], path))
+"""
