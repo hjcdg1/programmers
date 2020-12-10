@@ -6,7 +6,6 @@ def dfs(numbers, idx, target):
 			return 0
 	return dfs(numbers, idx + 1, target - numbers[idx]) + dfs(numbers, idx + 1, target + numbers[idx])
 
+
 def solution(numbers, target):
 	return dfs(numbers, 0, target)
-
-print(solution([1, 1, 1, 1, 1], 3))

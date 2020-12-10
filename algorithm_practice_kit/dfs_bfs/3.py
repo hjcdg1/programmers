@@ -1,3 +1,6 @@
+import queue
+
+
 def is_connected(str1, str2):
 	N = len(str1)
 	diff = 0
@@ -8,18 +11,6 @@ def is_connected(str1, str2):
 			return False
 	return True
 
-def dfs(v, nvs, visited, target_v):
-	if v == target_v:
-		return 0
-
-	visited[v] = True
-	min_cnt = float('inf')
-	for nv in nvs[v]:
-		if not visited[nv]:
-			min_cnt = min(min_cnt, 1 + dfs(nv, nvs, visited, target_v))
-
-	visited[v] = False
-	return min_cnt
 
 def solution(begin, target, words):
 	if target not in words:
@@ -38,7 +29,20 @@ def solution(begin, target, words):
 				nvs[i + 1].append(j + 1)
 
 	target_v = words.index(target) + 1
-	visited = [False for _ in range(N)]
-	answer = dfs(0, nvs, visited, target_v)
+	q = queue.Queue()
+	distance = [-1 for _ in range(N)]
 
-	return answer if answer != float('inf') else 0
+	q.put(0)
+	distance[0] = 0
+
+	while q.qsize() > 0:
+		v = q.get()
+		for nv in nvs[v]:
+			if distance[nv] == -1:
+				q.put(nv)
+				distance[nv] = distance[v] + 1
+
+	if distance[target_v] == -1:
+		return 0;
+	else:
+		return distance[target_v]
